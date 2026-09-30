@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ contract.player.player_name }} - Player Profile</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --glass-bg: rgba(15, 15, 15, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --text-main: #ffffff;
+            --text-muted: #888888;
+
+            --color-attacker: #ff4757;
+            --color-midfielder: #ffa502;
+            --color-defender: #2ed573;
+            --color-goalkeeper: #1e90ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #000000;
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        /* --- NỀN ĐEN VÀ HIỆU ỨNG VẠCH SÁNG CHẠY Ở BACKGROUND --- */
+        .ambient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            background-color: #050505;
+            overflow: hidden;
+        }
+
+        /* Lưới điện tử mờ */
+        .ambient-bg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image: linear-gradient(rgba(255,255,255,0.015) 1px, transparent 1px),
+                              linear-gradient(90deg, rgba(255,255,255,0.015) 1px, transparent 1px);
+            background-size: 40px 40px;
+            opacity: 0.8;
+            z-index: 2;
+        }
+
+        /* Vệt sáng trắng quét chéo qua lại ở nền */
+        .ambient-bg::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            /* Gradient vệt sáng trắng bạc */
+            background: linear-gradient(
+                45deg,
+                transparent 30%,
+                rgba(255, 255, 255, 0.02) 45%,
+                rgba(255, 255, 255, 0.06) 50%,
+                rgba(255, 255, 255, 0.02) 55%,
+                transparent 70%
+            );
+            background-size: 200% 200%;
+            animation: sweepBackground 10s ease-in-out infinite alternate;
+            z-index: 1;
+        }
+
+        /* --- GIAO DIỆN CHÍNH --- */
+        .interface-wrapper {
+            position: relative;
+            z-index: 3;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 3vw 5vw;
+        }
+
+        .top-nav {
+            display: flex;
+            justify-content: flex-start;
+            animation: fadeDown 0.8s ease-out;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            color: #ffffff;
+            transform: translateX(-5px);
+        }
+
+        .profile-container {
+            flex-grow: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 70px;
+            max-width: 1100px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Khung Avatar (Đã gỡ vạch quét xoay tròn) */
+        .player-hero {
+            position: relative;
+            animation: fadeRight 1s ease-out 0.2s backwards;
+        }
+
+        .photo-frame {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            padding: 6px;
+            /* Khung viền kim loại bạc tĩnh */
+            background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0.02) 50%, rgba(255,255,255,0.1) 100%);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+            position: relative;
+            z-index: 2;
+        }
+
+        .photo-frame img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #0a0a0a;
+            border: 6px solid #000000;
+        }
+
+        /* Cột Thông Số */
+        .player-details {
+            flex: 1;
+            animation: fadeUp 1s ease-out 0.4s backwards;
+        }
+
+        .tag-group {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .player-nationality {
+            font-size: 1rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        /* Tag Vị trí vẫn phát màu tương ứng */
+        .position-tag {
+            padding: 4px 16px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            backdrop-filter: blur(5px);
+        }
+
+        .pos-attacker { color: var(--color-attacker); border: 1px solid rgba(255, 71, 87, 0.4); background: rgba(255, 71, 87, 0.1); box-shadow: 0 0 15px rgba(255, 71, 87, 0.2); }
+        .pos-midfielder { color: var(--color-midfielder); border: 1px solid rgba(255, 165, 2, 0.4); background: rgba(255, 165, 2, 0.1); box-shadow: 0 0 15px rgba(255, 165, 2, 0.2); }
+        .pos-defender { color: var(--color-defender); border: 1px solid rgba(46, 213, 115, 0.4); background: rgba(46, 213, 115, 0.1); box-shadow: 0 0 15px rgba(46, 213, 115, 0.2); }
+        .pos-goalkeeper { color: var(--color-goalkeeper); border: 1px solid rgba(30, 144, 255, 0.4); background: rgba(30, 144, 255, 0.1); box-shadow: 0 0 15px rgba(30, 144, 255, 0.2); }
+        .pos-default { color: #ffffff; border: 1px solid rgba(255, 255, 255, 0.4); background: rgba(255, 255, 255, 0.1); }
+
+        .player-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(3.5rem, 5vw, 5.5rem);
+            font-weight: 900;
+            line-height: 1.1;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            color: #ffffff;
+            margin-bottom: 30px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+        }
+
+        /* Ô Thông số (Đã gỡ vạch laser trên đầu) */
+        .stat-box {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 20px 25px;
+            transition: all 0.3s ease;
+        }
+
+        .stat-box:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .stat-label {
+            display: block;
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        /* Các hiệu ứng Animation */
+        @keyframes fadeRight { from { opacity: 0; transform: translateX(-40px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(40px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Hiệu ứng vệt sáng lướt ở nền */
+        @keyframes sweepBackground {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        @media (max-width: 900px) {
+            .profile-container {
+                flex-direction: column;
+                text-align: center;
+                gap: 40px;
+                margin-top: 40px;
+            }
+            .tag-group { justify-content: center; }
+            .stats-grid { text-align: left; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Khối nền Đen chứa vệt sáng trắng lướt qua -->
+    <div class="ambient-bg"></div>
+
+    <div class="interface-wrapper">
+        <nav class="top-nav">
+            <a href="javascript:history.back()" class="back-btn">
+                <span>&#10094;</span> BACK TO SQUAD
+            </a>
+        </nav>
+
+        <div class="profile-container">
+            <div class="player-hero">
+                <div class="photo-frame">
+                    {% if contract.player.player_photo %}
+                        <img src="{{ contract.player.player_photo }}" alt="{{ contract.player.player_name }}">
+                    {% else %}
+                        <img src="https://via.placeholder.com/320x320/0a0a0a/333333?text=No+Photo" alt="Default Player">
+                    {% endif %}
+                </div>
+            </div>
+
+            <div class="player-details">
+                <div class="tag-group">
+                    <span class="player-nationality">{{ contract.player.player_nationality|default:"Unknown Nat" }}</span>
+                    <span class="position-tag
+                        {% if contract.position == 'Attacker' %} pos-attacker
+                        {% elif contract.position == 'Midfielder' %} pos-midfielder
+                        {% elif contract.position == 'Defender' %} pos-defender
+                        {% elif contract.position == 'Goalkeeper' %} pos-goalkeeper
+                        {% else %} pos-default {% endif %}">
+                        {{ contract.position|default:"Unknown" }}
+                    </span>
+                </div>
+
+                <h1 class="player-name">{{ contract.player.player_name }}</h1>
+
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <span class="stat-label">Age</span>
+                        <span class="stat-value">{{ contract.player.player_age|default:"N/A" }} YRS</span>
+                    </div>
+
+                    <div class="stat-box">
+                        <span class="stat-label">Height</span>
+                        <span class="stat-value">{{ contract.player.player_height|default:"N/A" }}</span>
+                    </div>
+
+                    <div class="stat-box">
+                        <span class="stat-label">Weight</span>
+                        <span class="stat-value">{{ contract.player.player_weight|default:"N/A" }}</span>
+                    </div>
+
+                    <div class="stat-box">
+                        <span class="stat-label">Date of Birth</span>
+                        <span class="stat-value">{{ contract.player.player_birth_date|default:"N/A" }}</span>
+                    </div>
+
+                    <div class="stat-box" style="grid-column: 1 / -1;">
+                        <span class="stat-label">Birth Place</span>
+                        <span class="stat-value">{{ contract.player.player_birth_place|default:"N/A" }}</span>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</body>
+</html>

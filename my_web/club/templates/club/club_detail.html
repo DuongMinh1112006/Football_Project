@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ club.club_name }}</title>
+
+    <!-- Google Fonts: Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* ================= CÀI ĐẶT CHUNG & MÀU NỀN CHẠY ================= */
+        :root {
+            --accent: #3b82f6;
+            --text-light: #f8fafc;
+            --text-muted: #94a3b8;
+            --card-bg: rgba(30, 41, 59, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(-45deg, #000000, #0a0a0a, #020617, #050505);
+            background-size: 400% 400%;
+            animation: gradientBG 45s ease infinite;
+            color: var(--text-light);
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* ================= BANNER CÂU LẠC BỘ ================= */
+        .club-hero {
+            text-align: center;
+            padding: 60px 20px 40px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+
+        .club-logo {
+            width: 170px;
+            height: 170px;
+            object-fit: contain;
+            filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.15));
+        }
+
+        .club-hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .club-badges {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(5px);
+            padding: 8px 20px;
+            border-radius: 25px;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        a.badge:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--accent);
+            color: var(--text-light);
+        }
+
+        /* ================= DANH SÁCH CẦU THỦ ================= */
+        .container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 35px;
+            text-align: center;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .player-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 25px;
+        }
+
+        @media (max-width: 992px) {
+            .player-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+        @media (max-width: 600px) {
+            .player-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        /* ================= THẺ CẦU THỦ ================= */
+        a.player-card {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 16px;
+            padding: 25px 15px 20px;
+            text-align: center;
+            transition: transform 0.3s ease, border 0.3s ease;
+        }
+
+        a.player-card:hover {
+            transform: translateY(-5px);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            background: rgba(30, 41, 59, 0.7);
+        }
+
+        .photo-wrapper {
+            width: 85px;
+            height: 85px;
+            margin: 0 auto 15px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 2px solid rgba(255,255,255,0.1);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+            background: #1e293b;
+        }
+
+        .player-photo {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .player-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-light);
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        /* Chỉnh style vị trí: Dùng font thường, tự động viết hoa chữ cái đầu */
+        .player-pos {
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 6px;
+            text-transform: capitalize; /* Không viết hoa hết nữa, chỉ viết hoa chữ cái đầu */
+        }
+
+        /* Màu sắc vị trí */
+        .pos-attacker, .pos-forward { color: #f43f5e; } /* Đỏ */
+        .pos-midfielder { color: #eab308; }             /* Vàng */
+        .pos-defender { color: #22c55e; }               /* Xanh lá */
+        .pos-goalkeeper { color: #38bdf8; }             /* Xanh dương */
+        .pos-default { color: var(--text-muted); }
+
+        .player-nat {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+            border: 1px dashed rgba(255,255,255,0.1);
+            border-radius: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <header class="club-hero">
+        {% if club.club_logo %}
+            <img src="{{ club.club_logo }}" alt="{{ club.club_name }} Logo" class="club-logo">
+        {% endif %}
+
+        <h1>{{ club.club_name }}</h1>
+
+        <div class="club-badges">
+            <div class="badge">Founded: {{ club.club_founded}}</div>
+            <a href="{% url 'stadium' club.club_name club.club_stadium %}" class="badge">Stadium: {{ club.club_stadium}}</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <h2 class="section-title">Squad List</h2>
+
+        <div class="player-grid">
+            {% for contract in contracts %}
+            <a href="{% url 'player_detail' club.club_name contract.player.player_name %}" class="player-card">
+                <div class="photo-wrapper">
+                    {% if contract.player.player_photo %}
+                        <img src="{{ contract.player.player_photo }}" alt="{{ contract.player.player_name }}" class="player-photo">
+                    {% else %}
+                        <img src="https://via.placeholder.com/150x150/1e293b/94a3b8?text=No+Img" alt="No Photo" class="player-photo">
+                    {% endif %}
+                </div>
+
+                <h3 class="player-name">{{ contract.player.player_name }}</h3>
+
+                <div class="player-pos
+                    {% if contract.position == 'Attacker' or contract.position == 'Forward' %}pos-attacker
+                    {% elif contract.position == 'Midfielder' %}pos-midfielder
+                    {% elif contract.position == 'Defender' %}pos-defender
+                    {% elif contract.position == 'Goalkeeper' %}pos-goalkeeper
+                    {% else %}pos-default{% endif %}">
+                    {{ contract.position|default:"Unknown" }}
+                </div>
+
+                <div class="player-nat">
+                    {{ contract.player.player_nationality }}
+                </div>
+            </a>
+            {% empty %}
+            <div class="empty-state">
+                <p>No player data available.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </main>
+
+</body>
+</html>

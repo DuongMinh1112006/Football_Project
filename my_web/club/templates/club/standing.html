@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Standing</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --pl-neon: #00ff85;
+            --bg-dark: #0f172a;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            background: linear-gradient(-45deg, #020617, #0f172a, #081021, #1e293b);
+            background-size: 400% 400%;
+            animation: gradientMove 15s ease infinite;
+            font-family: 'Poppins', sans-serif;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* NÚT QUAY LẠI TRANG CHỦ */
+        .back-btn {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            color: white;
+            text-decoration: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: var(--pl-neon);
+            color: #020617;
+            transform: translateX(-5px);
+        }
+
+        /* TIÊU ĐỀ */
+        .header {
+            margin-top: 50px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin: 0;
+            text-shadow: 0 5px 20px rgba(0, 0, 0, 0.8);
+        }
+
+        .header p {
+            color: var(--pl-neon);
+            font-size: 1.2rem;
+            font-weight: 600;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            margin-top: 5px;
+        }
+
+        /* BẢNG XẾP HẠNG (TABLE) */
+        .table-container {
+            width: 95%;
+            max-width: 1000px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            margin-bottom: 50px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: center;
+        }
+
+        th {
+            color: rgba(255, 255, 255, 0.5);
+            font-weight: 600;
+            padding: 15px 10px;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        /* Chỉnh tên đội bóng căn lề trái */
+        th.text-left, td.text-left {
+            text-align: left;
+        }
+
+        td {
+            padding: 15px 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            font-size: 1.1rem;
+            font-weight: 400;
+            transition: background 0.3s;
+        }
+
+        /* Hàng chẵn màu hơi khác 1 xíu để dễ nhìn */
+        tr:nth-child(even) td {
+            background: rgba(255, 255, 255, 0.01);
+        }
+
+        tr:hover td {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* Hàng top 4 (Cúp C1) hiển thị số màu xanh */
+        tr:nth-child(-n+4) td.rank {
+            color: var(--pl-neon);
+            font-weight: 800;
+        }
+
+        /* Hàng 3 đội chót bảng (Xuống hạng) hiển thị màu đỏ */
+        tr:nth-last-child(-n+3) td.rank {
+            color: #ff4757;
+            font-weight: 800;
+        }
+
+        .rank {
+            font-weight: 600;
+            font-size: 1.2rem;
+            width: 50px;
+        }
+
+        /* Cột thông tin câu lạc bộ */
+        .club-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .club-logo {
+            width: 35px;
+            height: 35px;
+            object-fit: contain;
+            background: white;
+            border-radius: 50%;
+            padding: 3px;
+        }
+
+        .club-name {
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        /* Cột điểm số (Nổi bật nhất) */
+        .points {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--pl-neon);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Nút quay lại (Nhớ đổi 'home' thành tên name trong file urls.py của sếp) -->
+    <a href="{% url 'club-home' %}" class="back-btn">
+        <span>&larr;</span> Back to Premier league
+    </a>
+
+    <div class="header">
+        <h1>Standing</h1>
+        <!-- Biến current_round được truyền từ hàm view qua -->
+        <p>{{ current_round }}</p>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th></th>
+                    <th class="text-left">Club</th>
+                    <th title="Số trận đã đá (Played)">MP</th>
+                    <th title="Thắng (Won)">W</th>
+                    <th title="Hòa (Drawn)">D</th>
+                    <th title="Thua (Lost)">L</th>
+                    <th title="Bàn thắng (Goals For)">GF</th>
+                    <th title="Bàn thua (Goals Against)">GA</th>
+                    <th title="Hiệu số (Goal Difference)">GD</th>
+                    <th>Pts</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in standings %}
+                <tr>
+                    <!-- forloop.counter: Tự động đếm từ 1, 2, 3... theo vòng lặp của Django -->
+                    <td class="rank">{{ forloop.counter }}</td>
+
+                    <td class="text-left">
+                        <div class="club-info">
+                            {% if item.club.club_logo %}
+                                <img src="{{ item.club.club_logo }}" class="club-logo" alt="logo">
+                            {% else %}
+                                <img src="https://via.placeholder.com/35" class="club-logo" alt="logo">
+                            {% endif %}
+                            <span class="club-name">{{ item.club.club_name }}</span>
+                        </div>
+                    </td>
+
+                    <td>{{ item.played }}</td>
+                    <td>{{ item.won }}</td>
+                    <td>{{ item.drawn }}</td>
+                    <td>{{ item.lost }}</td>
+                    <td>{{ item.goals_for }}</td>
+                    <td>{{ item.goals_against }}</td>
+                    <td>{{ item.goal_difference }}</td>
+                    <td class="points">{{ item.points }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="10" style="padding: 30px; color: rgba(255,255,255,0.5);">
+                        Chưa có dữ liệu bảng xếp hạng. Sếp hãy chạy file tinh_diem.py nhé!
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+</body>
+</html>

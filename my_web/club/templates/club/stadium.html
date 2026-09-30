@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ stadium.name|default:"Stadium" }} - Elite Profile</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --accent-glow: #00f0ff;
+            --glass-border: rgba(255, 255, 255, 0.15);
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #030712;
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        /* Hình nền nét căng */
+        .ambient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: 1;
+            overflow: hidden;
+            background: #000;
+        }
+
+        .ambient-bg img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center right;
+            opacity: 0.9;
+            transform: scale(1.02);
+            animation: slowPan 40s infinite alternate ease-in-out;
+        }
+
+        /* Lớp phủ: Bóng tối ôm cả cạnh trái (cho tên sân) và dưới đáy (cho thanh thông số) */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            background:
+                linear-gradient(to right, rgba(3,7,18, 0.95) 0%, rgba(3,7,18, 0.5) 40%, transparent 70%),
+                linear-gradient(to top, rgba(3,7,18, 0.95) 0%, rgba(3,7,18, 0.5) 20%, transparent 60%);
+        }
+
+        /* Wrapper chia layout: Nav trên cùng, Tên ở giữa, Thông số dưới đáy */
+        .interface-wrapper {
+            position: relative;
+            z-index: 3;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 3vw 4vw;
+        }
+
+        /* Nút back trên cùng */
+        .top-nav {
+            display: flex;
+            justify-content: flex-start; /* Dồn nút sang trái, đã bỏ logo bên phải */
+            animation: fadeDown 1s ease-out;
+        }
+
+        .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-main);
+            text-decoration: none;
+            font-size: 0.95rem;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .back-btn::before {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 0;
+            width: 0%;
+            height: 2px;
+            background: var(--accent-glow);
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px var(--accent-glow);
+        }
+
+        .back-btn:hover::before { width: 100%; }
+
+        /* Khối tên sân (Đẩy ra giữa màn hình) */
+        .hero-content {
+            flex-grow: 1; /* Tự động đẩy khối này chiếm phần không gian giữa */
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Căn giữa theo chiều dọc */
+            max-width: 800px;
+            animation: fadeRight 1s ease-out 0.2s backwards;
+        }
+
+        .location-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+            color: var(--accent-glow);
+            font-weight: 600;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 15px;
+        }
+
+        .pulse-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--accent-glow);
+            border-radius: 50%;
+            box-shadow: 0 0 15px var(--accent-glow);
+            animation: pulse 2s infinite;
+        }
+
+        .stadium-name {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(3.5rem, 6vw, 6.5rem);
+            font-weight: 800;
+            line-height: 1;
+            text-transform: uppercase;
+            letter-spacing: -1px;
+            color: #ffffff;
+            text-shadow: 0 10px 30px rgba(0,0,0,0.8);
+        }
+
+        /* Thanh thông số dưới đáy (Horizontal Bar) */
+        .stats-footer {
+            display: flex;
+            width: 100%;
+            gap: 20px;
+            margin-top: 40px;
+            animation: fadeUp 1s ease-out 0.4s backwards;
+        }
+
+        .stat-panel {
+            flex: 1; /* Các khối tự động chia đều chiều ngang */
+            padding: 20px 30px;
+            background: rgba(10, 14, 23, 0.5);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-address {
+            flex: 2; /* Trải dài hơn để đủ chỗ ghi địa chỉ */
+        }
+
+        .stat-panel:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255,255,255,0.3);
+            transform: translateY(-3px);
+        }
+
+        .stat-panel::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: var(--accent-glow);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+        .stat-panel:hover::before { opacity: 1; }
+
+        .stat-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            font-weight: 600;
+            display: block;
+        }
+
+        .stat-value {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #ffffff;
+            line-height: 1.2;
+        }
+
+        .stat-address .stat-value {
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        /* Animations */
+        @keyframes slowPan {
+            0% { transform: scale(1.02) translateX(0); }
+            100% { transform: scale(1.08) translateX(-2%); }
+        }
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.5; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.5; }
+        }
+        @keyframes fadeRight {
+            from { opacity: 0; transform: translateX(-40px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Responsive cho điện thoại (Chuyển thành cột dọc nếu màn quá nhỏ) */
+        @media (max-width: 768px) {
+            .overlay {
+                background: linear-gradient(to top, rgba(3,7,18, 0.95) 0%, rgba(3,7,18, 0.7) 50%, rgba(3,7,18, 0.2) 100%);
+            }
+            .stadium-name {
+                font-size: 2.8rem;
+            }
+            .stats-footer {
+                flex-direction: column; /* Dàn dọc trên mobile */
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Hình nền cực nét -->
+    <div class="ambient-bg">
+        {% if stadium.image %}
+            <img src="{{ stadium.image }}" alt="{{ stadium.name }}">
+        {% else %}
+            <img src="https://images.unsplash.com/photo-1577223625816-7546f13df25d?q=80&w=2000&auto=format&fit=crop" alt="Stadium Default">
+        {% endif %}
+    </div>
+
+    <!-- Lớp phủ tạo bóng tối -->
+    <div class="overlay"></div>
+
+    <div class="interface-wrapper">
+
+        <!-- Nút Back góc trái trên -->
+        <nav class="top-nav">
+            <a href="javascript:history.back()" class="back-btn">
+                <span>&#10094;</span> BACK TO CLUB
+            </a>
+        </nav>
+
+        <!-- Khối Tên sân ở giữa màn hình (lệch trái) -->
+        <div class="hero-content">
+            <div class="location-tag">
+                <div class="pulse-dot"></div>
+                {{ stadium.city|default:"Location Unknown" }}
+            </div>
+            <h1 class="stadium-name">{{ stadium.name }}</h1>
+        </div>
+
+        <!-- Khối Thông số dàn ngang dưới đáy màn hình -->
+        <div class="stats-footer">
+            <div class="stat-panel">
+                <span class="stat-label">Capacity</span>
+                <span class="stat-value">{{ stadium.capacity|default:"N/A" }}</span>
+            </div>
+
+            <div class="stat-panel">
+                <span class="stat-label">Surface</span>
+                <span class="stat-value">{{ stadium.surface|default:"N/A" }}</span>
+            </div>
+
+            <!-- Panel địa chỉ được cấp nhiều diện tích hơn (flex: 2) -->
+            <div class="stat-panel stat-address">
+                <span class="stat-label">Official Address</span>
+                <span class="stat-value">{{ stadium.address|default:"Information not available" }}</span>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>
