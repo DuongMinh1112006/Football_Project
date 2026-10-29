@@ -69,6 +69,29 @@ class Fixture(models.Model):
         return f"{self.home_team.club_name}| {self.home_score} - {self.away_score} | {self.away_team.club_name}"
 
 
+class PlayerFixture(models.Model):
+
+    fixture = models.ForeignKey('Fixture', on_delete=models.CASCADE, related_name='player_stats')
+    player = models.ForeignKey('Player', on_delete=models.CASCADE, related_name='fixture_stats')
+
+    rating = models.CharField(max_length=10, null=True, blank=True)  # API-Football thường trả về chuỗi như "7.5"
+    minutes = models.IntegerField(default=0, null=True, blank=True)
+    min_in = models.IntegerField(null=True, blank=True)
+    min_out = models.IntegerField(null=True, blank=True)
+
+    goals = models.IntegerField(default=0, null=True, blank=True)
+    assists = models.IntegerField(default=0, null=True, blank=True)
+    yellow_card = models.IntegerField(default=0, null=True, blank=True)
+    red_card = models.IntegerField(default=0, null=True, blank=True)
+
+    class Meta:
+        unique_together = ('fixture', 'player')
+
+    def __str__(self):
+        return f"Cầu thủ {self.player.player_name} - Trận {self.fixture.fixture_id}"
+
+
+
 class Standing(models.Model):
     club = models.ForeignKey(Club, on_delete=models.CASCADE, related_name='standings')
 
@@ -90,3 +113,4 @@ class Standing(models.Model):
 
     def __str__(self):
         return f"{self.club.club_name} | {self.round_name} | {self.points} "
+

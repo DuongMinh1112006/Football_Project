@@ -1,10 +1,226 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Title</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Match</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap');
+
+        body {
+            background-color: #0b1120;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Montserrat', sans-serif;
+            color: #ffffff;
+            box-sizing: border-box;
+        }
+
+        .match-form-wrapper {
+            background-color: #121827;
+            padding: 40px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 700px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .match-form-title {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+        }
+
+        .match-form-subtitle {
+            text-align: center;
+            color: #00ff85;
+            font-weight: 700;
+            letter-spacing: 3px;
+            font-size: 13px;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+        }
+
+        /* Message Alerts Styling */
+        .alert-messages {
+            margin-bottom: 25px;
+        }
+
+        .alert-item {
+            padding: 14px 18px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .alert-error {
+            color: #ff6b6b;
+            background-color: rgba(220, 53, 69, 0.15);
+            border: 1px solid rgba(220, 53, 69, 0.4);
+        }
+
+        .alert-success {
+            color: #00ff85;
+            background-color: rgba(0, 255, 133, 0.1);
+            border: 1px solid rgba(0, 255, 133, 0.3);
+        }
+
+        .form-row {
+            display: flex;
+            gap: 25px;
+            margin-bottom: 20px;
+        }
+
+        .form-col {
+            flex: 1;
+        }
+
+        .vs-divider {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 20px;
+            color: #4a5568;
+            padding-top: 20px;
+        }
+
+        .match-form-wrapper label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #a0aec0;
+            letter-spacing: 1px;
+        }
+
+        .match-form-wrapper input,
+        .match-form-wrapper select {
+            width: 100%;
+            padding: 14px 18px;
+            background-color: #0b1120;
+            border: 1px solid #2d3748;
+            border-radius: 10px;
+            color: #ffffff;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+            color-scheme: dark;
+        }
+
+        .match-form-wrapper input:focus,
+        .match-form-wrapper select:focus {
+            outline: none;
+            border-color: #00ff85;
+            box-shadow: 0 0 0 2px rgba(0, 255, 133, 0.2);
+        }
+
+        .match-form-wrapper button[type="submit"] {
+            width: 100%;
+            padding: 16px;
+            margin-top: 15px;
+            background-color: transparent;
+            border: 1px solid #ffffff;
+            border-radius: 30px;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .match-form-wrapper button[type="submit"]:hover {
+            background-color: #ffffff;
+            color: #0b1120;
+        }
+    </style>
 </head>
 <body>
+
+<div class="match-form-wrapper">
+    <div class="match-form-title">Add Match</div>
+    {% if messages %}
+        <div class="alert-messages">
+            {% for message in messages %}
+                {% if message.tags == 'error' %}
+                    <div class="alert-item alert-error">
+                        ❌ {{ message }}
+                    </div>
+                {% elif message.tags == 'success' %}
+                    <div class="alert-item alert-success">
+                        ✅ {{ message }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <form method="POST" action="">
+        {% csrf_token %}
+
+        <div class="form-row">
+            <!-- Home Team Column -->
+            <div class="form-col">
+                <label>Home Team</label>
+                <select name="home_team" required>
+                    <option value="" disabled selected>Select home team</option>
+                    {% for club in clubs %}
+                        <option value="{{ club.club_id }}">{{ club.club_name }}</option>
+                    {% endfor %}
+                </select>
+                <br><br>
+                <label>Home Score</label>
+                <input type="number" name="home_score" min="0" required placeholder="0">
+            </div>
+
+            <!-- VS Divider -->
+            <div class="vs-divider">VS</div>
+
+            <!-- Away Team Column -->
+            <div class="form-col">
+                <label>Away Team</label>
+                <select name="away_team" required>
+                    <option value="" disabled selected>Select away team</option>
+                    {% for club in clubs %}
+                        <option value="{{ club.club_id }}">{{ club.club_name }}</option>
+                    {% endfor %}
+                </select>
+                <br><br>
+                <label>Away Score</label>
+                <input type="number" name="away_score" min="0" required placeholder="0">
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-col">
+                <label>Round</label>
+                <input type="number" name="round_name" min="1" required placeholder="e.g. 1">
+            </div>
+            <div class="form-col">
+                <label>Match Date</label>
+                <input type="date" name="match_date" required>
+            </div>
+        </div>
+
+        <button type="submit">Save Match</button>
+    </form>
+</div>
 
 </body>
 </html>

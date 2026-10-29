@@ -14,7 +14,6 @@ from club.models import Club, Player, Contract
 def fetch_players_for_club(club_id, season_year="2024"):
     print(f"Đang cào dữ liệu cho CLB ID: {club_id} (Mùa {season_year})...")
 
-    # Kiểm tra xem CLB đã có trong Database chưa
     try:
         club_obj = Club.objects.get(club_id=club_id)
     except Club.DoesNotExist:
@@ -23,14 +22,13 @@ def fetch_players_for_club(club_id, season_year="2024"):
 
     url = "https://v3.football.api-sports.io/players"
     headers = {
-        'x-rapidapi-key': 'b02cc19027cb67ab71a703f63bb5b4f0'
+        'x-rapidapi-key': os.getenv('API_KEY')
     }
 
     current_page = 1
-    total_pages = 1  # Khởi tạo mặc định là 1, sẽ được cập nhật khi gọi API lần đầu
+    total_pages = 1
     count = 0
 
-    # Vòng lặp tự động lật trang
     while current_page <= total_pages:
         querystring = {"team": club_id, "season": season_year, "page": current_page}
         print(f"Đang xử lý trang {current_page} / {total_pages} ...")
@@ -96,4 +94,4 @@ def fetch_players_for_club(club_id, season_year="2024"):
 # --- KHU VỰC CHẠY THỬ ---
 if __name__ == '__main__':
     # Ví dụ sếp muốn cào cho CLB có ID 66 ở mùa 2024
-    fetch_players_for_club(club_id=42, season_year="2024")
+    fetch_players_for_club(club_id=66, season_year="2024")

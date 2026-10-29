@@ -111,7 +111,6 @@
             font-size: 0.9rem;
         }
 
-        /* Chỉnh tên đội bóng căn lề trái */
         th.text-left, td.text-left {
             text-align: left;
         }
@@ -182,15 +181,12 @@
 </head>
 <body>
 
-    <!-- Nút quay lại (Nhớ đổi 'home' thành tên name trong file urls.py của sếp) -->
     <a href="{% url 'club-home' %}" class="back-btn">
         <span>&larr;</span> Back to Premier league
     </a>
 
     <div class="header">
         <h1>Standing</h1>
-        <!-- Biến current_round được truyền từ hàm view qua -->
-        <p>{{ current_round }}</p>
     </div>
 
     <div class="table-container">
@@ -217,12 +213,12 @@
 
                     <td class="text-left">
                         <div class="club-info">
-                            {% if item.club.club_logo %}
-                                <img src="{{ item.club.club_logo }}" class="club-logo" alt="logo">
+                            {% if item.club_logo %}
+                                <img src="{{ item.club_logo }}" class="club-logo" alt="logo">
                             {% else %}
                                 <img src="https://via.placeholder.com/35" class="club-logo" alt="logo">
                             {% endif %}
-                            <span class="club-name">{{ item.club.club_name }}</span>
+                            <span class="club-name">{{ item.club_name }}</span>
                         </div>
                     </td>
 
@@ -238,7 +234,7 @@
                 {% empty %}
                 <tr>
                     <td colspan="10" style="padding: 30px; color: rgba(255,255,255,0.5);">
-                        Chưa có dữ liệu bảng xếp hạng. Sếp hãy chạy file tinh_diem.py nhé!
+
                     </td>
                 </tr>
                 {% endfor %}

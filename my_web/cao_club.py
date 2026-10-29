@@ -20,7 +20,7 @@ def run():
     }
 
     headers = {
-        "x-apisports-key": 'b02cc19027cb67ab71a703f63bb5b4f0',  # Dán key API thật vào
+        "x-apisports-key": os.getenv('API_KEY'),
     }
 
     print("Đang cào dữ liệu Đội bóng và Sân vận động...")

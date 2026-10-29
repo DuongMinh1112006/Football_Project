@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Premier League</title>
 
-    <!-- Font Poppins chuẩn thể thao -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800;900&display=swap" rel="stylesheet">
 
     <style>
@@ -35,9 +34,89 @@
             100% { background-position: 0% 50%; }
         }
 
+        /* ================ THANH DẪN HƯỚNG TỔNG (TOP BAR) ================ */
+        .top-navbar {
+            width: 100%;
+            max-width: 1200px;
+            padding: 25px 20px 0 20px;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            gap: 15px;
+            box-sizing: border-box;
+            z-index: 10;
+        }
+
+        /* Ô tìm kiếm góc trên */
+        .search-form {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 50px;
+            padding: 5px 15px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+        }
+
+        .search-form:focus-within {
+            border-color: var(--pl-neon);
+            box-shadow: 0 0 15px rgba(0, 255, 133, 0.3);
+        }
+
+        .search-input {
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #ffffff;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            padding: 6px 10px;
+            width: 180px;
+        }
+
+        .search-input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .search-btn {
+            background: transparent;
+            border: none;
+            color: var(--pl-neon);
+            cursor: pointer;
+            font-size: 1rem;
+            padding: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Nút thao tác Admin / Nhập liệu */
+        .top-action-btn {
+            text-decoration: none;
+            color: #ffffff;
+            font-size: 0.85rem;
+            font-weight: 600;
+            padding: 10px 20px;
+            border-radius: 50px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .top-action-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: #ffffff;
+            color: var(--pl-neon);
+            transform: translateY(-2px);
+        }
+
         /* ================ TRANG TRÍ HEADER ================ */
         .header {
-            margin-top: 60px;
+            margin-top: 20px;
             text-align: center;
             color: white;
             animation: fadeInDown 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
@@ -68,12 +147,13 @@
             text-transform: uppercase;
         }
 
-        /* ================ THANH ĐIỀU HƯỚNG ================ */
+        /* ================ THANH ĐIỀU HƯỚNG CHÍNH ================ */
         .nav-links {
             display: flex;
             justify-content: center;
             gap: 20px;
             margin-top: 30px;
+            flex-wrap: wrap;
         }
 
         .nav-btn {
@@ -194,28 +274,39 @@
         .club-card:hover .club-name {
             color: var(--pl-neon);
         }
-
-        .empty-message {
-            color: rgba(255, 255, 255, 0.5);
-            text-align: center;
-            font-size: 1.2rem;
-            grid-column: 1 / -1;
-        }
     </style>
 </head>
 <body>
 
+    <!-- 1. THANH TOP BAR GÓC TRÊN BÊN PHẢI (Search + 2 Nút Nhập Liệu) -->
+    <div class="top-navbar">
+        <!-- Form Tìm Kiếm Nhanh -->
+        <a href="{% url 'search_page' %}" class="top-action-btn">Search</a>
+
+        <!-- Thẻ Nhập 1: Cập nhật chỉ số cầu thủ trong trận -->
+        <a href="{% url 'add_player_stat' %}" class="top-action-btn">Add player stats</a>
+
+        <a href="{% url 'add_fixture'%}" class="top-action-btn">Add Matches</a>
+    </div>
+
+    <!-- 2. KHU VỰC TÊN GIẢI ĐẤU & 3 NÚT BÁO CÁO CHÍNH -->
     <div class="header">
         <h1>Premier League</h1>
         <p>2024 / 2025</p>
 
         <div class="nav-links">
-            <!-- Nhớ đổi tên trong url '' cho khớp với urls.py -->
+            <!-- Report 1: Bảng xếp hạng CLB -->
             <a href="{% url 'standing' %}" class="nav-btn">Standing</a>
+
+            <!-- Lịch thi đấu -->
             <a href="{% url 'matches' %}" class="nav-btn">Matches</a>
+
+            <!-- Report 2: Thống kê cá nhân (Vua phá lưới, Kiến tạo, Rating...) -->
+            <a href="{% url 'report_dashboard' %}" class="nav-btn">Stats</a>
         </div>
     </div>
 
+    <!-- 3. DANH SÁCH CÁC CÂU LẠC BỘ -->
     <div class="club-container">
         {% for club in clubs %}
             <a href="{% url 'club_detail' club.club_name %}" class="club-card">

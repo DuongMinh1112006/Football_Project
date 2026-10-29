@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+    <title>Rating</title>
+</head>
+
+<style>
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap');
+
+    body {
+        background-color: #0b1120;
+        margin: 0;
+        padding: 40px;
+        font-family: 'Montserrat', sans-serif;
+        color: #ffffff;
+    }
+
+    .dashboard-wrapper {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    .dashboard-title {
+        font-size: 28px;
+        font-weight: 900;
+        text-transform: uppercase;
+        margin-bottom: 8px;
+        letter-spacing: 1px;
+    }
+
+    .dashboard-subtitle {
+        font-size: 14px;
+        color: #94a3b8;
+        margin-bottom: 35px;
+    }
+
+    .dashboard-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 20px;
+    }
+
+    .stat-card {
+        display: block;
+        padding: 30px 25px;
+        background-color: #121827;
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        border-radius: 16px;
+        text-decoration: none;
+        color: #ffffff;
+        transition: all 0.3s ease;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        border-color: #00ff85; /* Viền xanh neon khi hover */
+        background-color: #1a2234;
+    }
+
+    .card-title {
+        font-size: 18px;
+        font-weight: 700;
+        margin-bottom: 10px;
+        color: #ffffff;
+    }
+
+    .card-desc {
+        font-size: 13px;
+        color: #94a3b8;
+        line-height: 1.5;
+    }
+</style>
+
+<div class="dashboard-wrapper">
+    <div class="dashboard-title"> Reports & Statistics</div>
+
+    <div class="dashboard-container">
+
+        <a href="{% url 'goals' %}" class="stat-card">
+            <div class="card-title">Goals</div>
+        </a>
+
+        <a href="{% url 'assists' %}" class="stat-card">
+            <div class="card-title">Assists</div>
+        </a>
+
+        <a href="{% url 'rating'%}" class="stat-card">
+            <div class="card-title">Average Rating</div>
+        </a>
+
+        <a href="{% url 'yellow_card'%}" class="stat-card">
+            <div class="card-title">Yellow Cards</div>
+        </a>
+
+        <a href="{% url 'red_card'%}" class="stat-card">
+            <div class="card-title">Red Cards</div>
+        </a>
+
+    </div>
+</div>

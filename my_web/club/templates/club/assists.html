@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Assists</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap');
+
+        body {
+            background-color: #0b1120;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .top-assists-container {
+            background-color: transparent;
+            width: 100%;
+            max-width: 650px;
+            border-radius: 20px;
+            padding: 30px 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .top-assists-title {
+            font-size: 22px;
+            font-weight: 900;
+            text-transform: uppercase;
+            color: #ffffff;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .h-rank {
+            width: 30px;
+            text-align: center;
+        }
+
+        .h-player {
+            flex: 1;
+            padding-left: 73px;
+        }
+
+        .h-assists {
+            text-align: right;
+            min-width: 80px;
+        }
+
+        /* CSS cho phần dữ liệu cầu thủ */
+        .player-row {
+            display: flex;
+            align-items: center;
+            padding: 12px 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            transition: background 0.3s ease;
+        }
+
+        .player-row:last-child {
+            border-bottom: none;
+        }
+
+        .player-row:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+        }
+
+        .rank {
+            width: 30px;
+            font-size: 15px;
+            color: #a0aec0;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 15px;
+            margin-left: 10px;
+            background-color: #2d3748;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 11px;
+            color: #a0aec0;
+        }
+
+        .player-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .player-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #ffffff;
+        }
+
+        .player-meta {
+            font-size: 13px;
+            color: #a0aec0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .team-logo {
+            width: 22px;
+            height: 22px;
+            object-fit: contain;
+        }
+
+        .assists {
+            font-size: 18px;
+            font-weight: 700;
+            color: #00ff85; /* Đổi màu xanh neon cho số bàn thắng để nổi bật hơn */
+            text-align: right;
+            min-width: 80px;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #a0aec0;
+            padding: 30px 20px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-assists-container">
+        <div class="top-assists-title">Assists</div>
+
+        <!-- Danh sách cầu thủ -->
+        <div class="assists-list">
+            {% for row in results %}
+                <div class="player-row">
+                    <!-- Hạng -->
+                    <div class="rank">{{ forloop.counter }}</div>
+
+                    <!-- Ảnh đại diện cầu thủ -->
+                    {% if row.1 %}
+                        <img src="{{ row.1 }}" class="avatar" alt="Avatar">
+                    {% else %}
+                        <div class="avatar">Trống</div>
+                    {% endif %}
+
+                    <!-- Thông tin cầu thủ -->
+                    <div class="player-info">
+                        <div class="player-name">{{ row.0 }}</div>
+
+                        <div class="player-meta">
+                            <!-- Hiển thị Logo đội bóng -->
+                            {% if row.3 %}
+                                <img src="{{ row.3 }}" class="team-logo" alt="Team">
+                            {% else %}
+                                <span>Trống</span>
+                            {% endif %}
+
+                            <span>{{ row.2 }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Số bàn thắng -->
+                    <div class="assists">{{ row.4 }}</div>
+                </div>
+            {% empty %}
+                <div class="empty-state">
+                    Giải đấu chưa có bàn thắng nào được ghi.
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>

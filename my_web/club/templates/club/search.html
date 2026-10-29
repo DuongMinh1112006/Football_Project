@@ -1,10 +1,256 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Title</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Players</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900&display=swap');
+
+        body {
+            background-color: #0b1120;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            font-family: 'Montserrat', sans-serif;
+            color: #ffffff;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        .search-wrapper {
+            width: 100%;
+            max-width: 850px;
+        }
+
+        .search-title {
+            font-size: 28px;
+            font-weight: 900;
+            text-transform: uppercase;
+            margin-bottom: 30px;
+            text-align: center;
+            letter-spacing: 1px;
+        }
+
+        /* Filter Form Layout */
+        .filter-form {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+
+        .filter-form input[type="text"] {
+            flex: 2;
+            min-width: 220px;
+            padding: 14px 18px;
+            background-color: #121827;
+            border: 1px solid #2d3748;
+            border-radius: 10px;
+            color: #ffffff;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        .filter-form select {
+            flex: 1;
+            min-width: 160px;
+            padding: 14px 18px;
+            background-color: #121827;
+            border: 1px solid #2d3748;
+            border-radius: 10px;
+            color: #ffffff;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+            color-scheme: dark;
+        }
+
+        .filter-form input:focus,
+        .filter-form select:focus {
+            outline: none;
+            border-color: #00ff85;
+            box-shadow: 0 0 0 2px rgba(0, 255, 133, 0.2);
+        }
+
+        .filter-form button {
+            padding: 14px 28px;
+            background-color: transparent;
+            border: 1px solid #00ff85;
+            border-radius: 10px;
+            color: #00ff85;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .filter-form button:hover {
+            background-color: #00ff85;
+            color: #0b1120;
+        }
+
+        /* Dark Results Table */
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: #121827;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .results-table th {
+            background-color: rgba(255, 255, 255, 0.03);
+            padding: 16px 20px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #718096;
+            letter-spacing: 1px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .results-table td {
+            padding: 14px 20px;
+            font-size: 14px;
+            color: #ffffff;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            vertical-align: middle;
+        }
+
+        .results-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .results-table tr:hover td {
+            background-color: rgba(255, 255, 255, 0.03);
+        }
+
+        /* Flex Alignment Inside Cells */
+        .cell-flex {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .player-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            background-color: #2d3748;
+            flex-shrink: 0;
+        }
+
+        .team-logo {
+            width: 22px;
+            height: 22px;
+            object-fit: contain;
+            flex-shrink: 0;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .stat-highlight {
+            font-weight: 700;
+            color: #00ff85;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: #a0aec0;
+            padding: 40px 20px;
+            font-size: 14px;
+            background-color: #121827;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+    </style>
 </head>
 <body>
+
+<div class="search-wrapper">
+    <div class="search-title">Search Players</div>
+
+    <!-- Search & Filter Form -->
+    <form method="GET" action="" class="filter-form">
+        <input type="text" name="q" value="{{ query }}" placeholder="Search player name, club...">
+
+        <select name="pos">
+            <option value="">All Positions</option>
+            <option value="Attacker" {% if pos == 'Attacker' %}selected{% endif %}>Attacker</option>
+            <option value="Midfielder" {% if pos == 'Midfielder' %}selected{% endif %}>Midfielder</option>
+            <option value="Defender" {% if pos == 'Defender' %}selected{% endif %}>Defender</option>
+            <option value="Goalkeeper" {% if pos == 'Goalkeeper' %}selected{% endif %}>Goalkeeper</option>
+        </select>
+
+        <button type="submit">Filter</button>
+    </form>
+
+    <!-- Results Display -->
+    {% if results %}
+        <table class="results-table">
+            <thead>
+                <tr>
+                    <th>Player Name</th>
+                    <th>Club</th>
+                    <th>Position</th>
+                    <th class="text-center">Goals</th>
+                    <th class="text-center">Assists</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in results %}
+                    <tr>
+                        <!-- Cột Cầu thủ: Ảnh đại diện (row.0) + Tên (row.1) -->
+                        <td>
+                            <div class="cell-flex">
+                                {% if row.0 %}
+                                    <img src="{{ row.0 }}" class="player-avatar" alt="Avatar">
+                                {% endif %}
+                                <strong>{{ row.1 }}</strong>
+                            </div>
+                        </td>
+
+                        <!-- Cột Đội bóng: Logo đội (row.2) + Tên đội (row.3) -->
+                        <td>
+                            <div class="cell-flex">
+                                {% if row.2 %}
+                                    <img src="{{ row.2 }}" class="team-logo" alt="Club Logo">
+                                {% endif %}
+                                <span>{{ row.3 }}</span>
+                            </div>
+                        </td>
+
+                        <!-- Vị trí (row.6) -->
+                        <td>{{ row.6 }}</td>
+
+                        <!-- Bàn thắng (row.4) -->
+                        <td class="text-center stat-highlight">{{ row.4 }}</td>
+
+                        <!-- Kiến tạo (row.5) -->
+                        <td class="text-center">{{ row.5 }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% elif query or pos %}
+        <div class="empty-state">
+            No players found matching your search criteria.
+        </div>
+    {% endif %}
+</div>
 
 </body>
 </html>

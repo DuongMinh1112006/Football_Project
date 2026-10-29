@@ -6,7 +6,6 @@ from django.db.utils import IntegrityError
 from dotenv import load_dotenv
 load_dotenv()
 
-# ==========================================
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'my_web.settings')
 django.setup()
 
@@ -23,7 +22,7 @@ def run():
     }
 
     headers = {
-        "x-apisports-key": 'b02cc19027cb67ab71a703f63bb5b4f0'
+        "x-apisports-key": os.getenv('API_KEY')
     }
 
     try:
