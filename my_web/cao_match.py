@@ -62,13 +62,13 @@ def run():
                     'round_name': round_name
                 }
             )
-            print(f"✅ Đã lưu thành công trận: {fixture_id}")
+            print(f"Đã lưu thành công trận: {fixture_id}")
 
         except IntegrityError:
             print(
                 f" GÃY KHÓA NGOẠI trận {fixture_id}: Đội {home_team_id} hoặc {away_team_id} chưa có trong bảng Club!")
         except Exception as e:
-            print(f"❌ Lỗi không xác định ở trận {fixture_id}: {e}")
+            print(f"Lỗi không xác định ở trận {fixture_id}: {e}")
 
 
 if __name__ == '__main__':

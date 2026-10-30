@@ -64,7 +64,6 @@ def fetch_fixture_players():
                 yellow_card = cards_data.get('yellow') or 0
                 red_card = cards_data.get('red') or 0
 
-                # Dùng update_or_create để không bị lỗi trùng lặp khi chạy lại script nhiều lần
                 PlayerFixture.objects.update_or_create(
                     fixture=fixture,
                     player=player_obj,

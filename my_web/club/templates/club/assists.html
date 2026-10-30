@@ -49,7 +49,6 @@
             min-width: 80px;
         }
 
-        /* CSS cho phần dữ liệu cầu thủ */
         .player-row {
             display: flex;
             align-items: center;
@@ -120,7 +119,7 @@
         .assists {
             font-size: 18px;
             font-weight: 700;
-            color: #00ff85; /* Đổi màu xanh neon cho số bàn thắng để nổi bật hơn */
+            color: #00ff85;
             text-align: right;
             min-width: 80px;
         }
@@ -151,12 +150,10 @@
                         <div class="avatar">Trống</div>
                     {% endif %}
 
-                    <!-- Thông tin cầu thủ -->
                     <div class="player-info">
                         <div class="player-name">{{ row.0 }}</div>
 
                         <div class="player-meta">
-                            <!-- Hiển thị Logo đội bóng -->
                             {% if row.3 %}
                                 <img src="{{ row.3 }}" class="team-logo" alt="Team">
                             {% else %}
@@ -167,7 +164,6 @@
                         </div>
                     </div>
 
-                    <!-- Số bàn thắng -->
                     <div class="assists">{{ row.4 }}</div>
                 </div>
             {% empty %}

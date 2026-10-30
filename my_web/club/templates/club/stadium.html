@@ -274,14 +274,12 @@
 
     <div class="interface-wrapper">
 
-        <!-- Nút Back góc trái trên -->
         <nav class="top-nav">
             <a href="javascript:history.back()" class="back-btn">
                 <span>&#10094;</span> BACK TO CLUB
             </a>
         </nav>
 
-        <!-- Khối Tên sân ở giữa màn hình (lệch trái) -->
         <div class="hero-content">
             <div class="location-tag">
                 <div class="pulse-dot"></div>
@@ -290,7 +288,6 @@
             <h1 class="stadium-name">{{ stadium.name }}</h1>
         </div>
 
-        <!-- Khối Thông số dàn ngang dưới đáy màn hình -->
         <div class="stats-footer">
             <div class="stat-panel">
                 <span class="stat-label">Capacity</span>
@@ -302,7 +299,6 @@
                 <span class="stat-value">{{ stadium.surface|default:"N/A" }}</span>
             </div>
 
-            <!-- Panel địa chỉ được cấp nhiều diện tích hơn (flex: 2) -->
             <div class="stat-panel stat-address">
                 <span class="stat-label">Official Address</span>
                 <span class="stat-value">{{ stadium.address|default:"Information not available" }}</span>

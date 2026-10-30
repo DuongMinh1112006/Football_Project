@@ -34,7 +34,6 @@
             text-align: center;
         }
 
-        /* CSS cho phần dữ liệu cầu thủ */
         .player-row {
             display: flex;
             align-items: center;
@@ -102,7 +101,6 @@
             object-fit: contain;
         }
 
-        /* Khối chứa ô vuông nhỏ + số điểm */
         .rating-wrapper {
             display: flex;
             align-items: center;
@@ -111,7 +109,6 @@
             min-width: 70px;
         }
 
-        /* Ô vuông màu nhỏ bên trái số điểm */
         .rating-square {
             width: 12px;
             height: 12px;
@@ -119,7 +116,6 @@
             display: inline-block;
         }
 
-        /* Các màu điểm chuẩn Sofascore */
         .bg-blue {
             background-color: #2563eb; /* >= 9.0 */
         }
@@ -138,7 +134,6 @@
             background-color: #dc2626; /* < 6.0 */
         }
 
-        /* Số điểm màu trắng */
         .rating-value {
             font-size: 16px;
             font-weight: 800;
@@ -164,19 +159,16 @@
                     <!-- Hạng -->
                     <div class="rank">{{ forloop.counter }}</div>
 
-                    <!-- Ảnh đại diện cầu thủ -->
                     {% if row.1 %}
                         <img src="{{ row.1 }}" class="avatar" alt="Avatar">
                     {% else %}
                         <div class="avatar">Trống</div>
                     {% endif %}
 
-                    <!-- Thông tin cầu thủ -->
                     <div class="player-info">
                         <div class="player-name">{{ row.0 }}</div>
 
                         <div class="player-meta">
-                            <!-- Logo đội bóng -->
                             {% if row.3 %}
                                 <img src="{{ row.3 }}" class="team-logo" alt="Team">
                             {% else %}
@@ -187,7 +179,6 @@
                         </div>
                     </div>
 
-                    <!-- Cột Rating: Ô vuông nhỏ + Số điểm trắng -->
                     <div class="rating-wrapper">
                         <span class="rating-square {% if row.4 >= 9.0 %}bg-blue{% elif row.4 >= 8.0 %}bg-teal{% elif row.4 >= 7.0 %}bg-green{% elif row.4 >= 6.0 %}bg-orange{% else %}bg-red{% endif %}"></span>
                         <span class="rating-value">{{ row.4 }}</span>

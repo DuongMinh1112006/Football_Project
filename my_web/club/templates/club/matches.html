@@ -15,10 +15,9 @@
         .container {
             max-width: 900px;
             margin: 0 auto;
-            position: relative; /* Để canh vị trí nút Back */
+            position: relative;
         }
 
-        /* --- CSS CHO NÚT BACK --- */
         .back-button {
             display: inline-flex;
             align-items: center;
@@ -87,27 +86,23 @@
             background-color: #1c2128;
         }
 
-        /* --- CẤU TRÚC LOGO VÀ TÊN ĐỘI --- */
         .team {
             flex: 1;
             display: flex;
             align-items: center;
             font-size: 1.1em;
             font-weight: 600;
-            gap: 15px; /* Khoảng cách giữa chữ và logo */
+            gap: 15px;
         }
 
-        /* Đội nhà: Đẩy text về sát phải, logo nằm sát khung điểm */
         .home-team {
             justify-content: flex-end;
         }
 
-        /* Đội khách: Text nằm sát trái, logo nằm sát khung điểm */
         .away-team {
             justify-content: flex-start;
         }
 
-        /* Khung chứa ảnh logo */
         .team-logo {
             width: 35px;
             height: 35px;
@@ -140,7 +135,6 @@
 <body>
 
 <div class="container">
-    <!-- Nút Back góc trái -->
     <a href="/" class="back-button">
         <span class="back-icon">←</span> Back to Premier league
     </a>

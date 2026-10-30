@@ -1,6 +1,8 @@
 from django.shortcuts import render,get_object_or_404, redirect
 from .models import Club, Player, Contract, Standing, Fixture
 from django.contrib import messages
+from django.db import connection
+
 
 def club_home(request):
     context = {
@@ -87,7 +89,6 @@ def matches_list(request):
 
 
 
-from django.db import connection
 
 def add_fixture(request):
     if request.method == 'POST':
@@ -98,7 +99,6 @@ def add_fixture(request):
         round_match = f"Regular Season - {request.POST.get('round_name')}"
         match_date = request.POST.get('match_date')
 
-        # Đẩy dữ liệu xuống DB bằng SQL thuần
         with connection.cursor() as cursor:
             cursor.execute("SELECT COALESCE(MAX(fixture_id), 0) + 1 FROM club_fixture")
             new_id = cursor.fetchone()[0]
@@ -232,7 +232,6 @@ def search_page(request):
 
 def goals(request):
     with connection.cursor() as cursor:
-        # INNER JOIN để lọc những cầu thủ đã ra sân và tính tổng bàn thắng
         sql = """
             SELECT 
                 p.player_name, 
@@ -256,7 +255,6 @@ def goals(request):
 
 def assists(request):
     with connection.cursor() as cursor:
-        # INNER JOIN để lọc những cầu thủ đã ra sân và tính tổng bàn thắng
         sql = """
             SELECT 
                 p.player_name, 
@@ -280,7 +278,6 @@ def assists(request):
 
 def rating(request):
     with connection.cursor() as cursor:
-        # INNER JOIN để lọc những cầu thủ đã ra sân và tính tổng bàn thắng
         sql = """
             SELECT 
                 p.player_name, 
@@ -303,7 +300,6 @@ def rating(request):
 
 def yellow_card(request):
     with connection.cursor() as cursor:
-        # INNER JOIN để lọc những cầu thủ đã ra sân và tính tổng bàn thắng
         sql = """
             SELECT 
                 p.player_name, 
@@ -328,7 +324,6 @@ def yellow_card(request):
 
 def red_card(request):
     with connection.cursor() as cursor:
-        # INNER JOIN để lọc những cầu thủ đã ra sân và tính tổng bàn thắng
         sql = """
             SELECT 
                 p.player_name, 

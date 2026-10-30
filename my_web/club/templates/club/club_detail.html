@@ -5,11 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ club.club_name }}</title>
 
-    <!-- Google Fonts: Poppins -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* ================= CÀI ĐẶT CHUNG & MÀU NỀN CHẠY ================= */
         :root {
             --accent: #3b82f6;
             --text-light: #f8fafc;
@@ -39,7 +37,6 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* ================= BANNER CÂU LẠC BỘ ================= */
         .club-hero {
             text-align: center;
             padding: 60px 20px 40px;
@@ -85,7 +82,6 @@
             color: var(--text-light);
         }
 
-        /* ================= DANH SÁCH CẦU THỦ ================= */
         .container {
             max-width: 1200px;
             margin: 50px auto;
@@ -115,7 +111,6 @@
             .player-grid { grid-template-columns: repeat(2, 1fr); }
         }
 
-        /* ================= THẺ CẦU THỦ ================= */
         a.player-card {
             display: block;
             text-decoration: none;
@@ -162,19 +157,17 @@
             text-overflow: ellipsis;
         }
 
-        /* Chỉnh style vị trí: Dùng font thường, tự động viết hoa chữ cái đầu */
         .player-pos {
             font-size: 0.9rem;
             font-weight: 500;
             margin-bottom: 6px;
-            text-transform: capitalize; /* Không viết hoa hết nữa, chỉ viết hoa chữ cái đầu */
+            text-transform: capitalize;
         }
 
-        /* Màu sắc vị trí */
-        .pos-attacker, .pos-forward { color: #f43f5e; } /* Đỏ */
-        .pos-midfielder { color: #eab308; }             /* Vàng */
-        .pos-defender { color: #22c55e; }               /* Xanh lá */
-        .pos-goalkeeper { color: #38bdf8; }             /* Xanh dương */
+        .pos-attacker, .pos-forward { color: #f43f5e; }
+        .pos-midfielder { color: #eab308; }
+        .pos-defender { color: #22c55e; }
+        .pos-goalkeeper { color: #38bdf8; }
         .pos-default { color: var(--text-muted); }
 
         .player-nat {

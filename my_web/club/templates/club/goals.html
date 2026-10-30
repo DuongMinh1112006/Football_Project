@@ -137,26 +137,21 @@
     <div class="top-scorer-container">
         <div class="top-scorer-title">Goals</div>
 
-        <!-- Danh sách cầu thủ -->
         <div class="scorer-list">
             {% for row in results %}
                 <div class="player-row">
-                    <!-- Hạng -->
                     <div class="rank">{{ forloop.counter }}</div>
 
-                    <!-- Ảnh đại diện cầu thủ -->
                     {% if row.1 %}
                         <img src="{{ row.1 }}" class="avatar" alt="Avatar">
                     {% else %}
                         <div class="avatar">Trống</div>
                     {% endif %}
 
-                    <!-- Thông tin cầu thủ -->
                     <div class="player-info">
                         <div class="player-name">{{ row.0 }}</div>
 
                         <div class="player-meta">
-                            <!-- Hiển thị Logo đội bóng -->
                             {% if row.3 %}
                                 <img src="{{ row.3 }}" class="team-logo" alt="Team">
                             {% else %}
@@ -167,7 +162,6 @@
                         </div>
                     </div>
 
-                    <!-- Số bàn thắng -->
                     <div class="goals">{{ row.4 }}</div>
                 </div>
             {% empty %}

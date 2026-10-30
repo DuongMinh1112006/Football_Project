@@ -12,8 +12,6 @@ from club.models import Club, Player, Contract
 
 
 def fetch_players_for_club(club_id, season_year="2024"):
-    print(f"Đang cào dữ liệu cho CLB ID: {club_id} (Mùa {season_year})...")
-
     try:
         club_obj = Club.objects.get(club_id=club_id)
     except Club.DoesNotExist:
@@ -41,7 +39,6 @@ def fetch_players_for_club(club_id, season_year="2024"):
 
         data = response.json()
 
-        # Cập nhật lại tổng số trang từ phản hồi của API
         paging = data.get('paging', {})
         total_pages = paging.get('total', 1)
 
@@ -51,14 +48,12 @@ def fetch_players_for_club(club_id, season_year="2024"):
             print(f"Không có dữ liệu trả về cho trang {current_page}!")
             break
 
-        # Duyệt qua từng cầu thủ trong danh sách API trả về
         for item in players_list:
             p_info = item['player']
 
             stats = item['statistics'][0] if item['statistics'] else {}
             games = stats.get('games', {})
 
-            # A. Tạo hoặc cập nhật thông tin chuẩn vào bảng Player
             player_obj, created = Player.objects.update_or_create(
                 player_id=p_info['id'],
                 defaults={
@@ -73,7 +68,6 @@ def fetch_players_for_club(club_id, season_year="2024"):
                 }
             )
 
-            # B. Tạo hoặc cập nhật liên kết vào bảng trung gian Contract
             Contract.objects.update_or_create(
                 player=player_obj,
                 club=club_obj,
@@ -85,13 +79,10 @@ def fetch_players_for_club(club_id, season_year="2024"):
             )
             count += 1
 
-        # Chuyển sang trang tiếp theo
         current_page += 1
 
     print(f"Thành công! Đã đồng bộ tổng cộng {count} cầu thủ cho CLB: {club_obj.club_name}\n")
 
 
-# --- KHU VỰC CHẠY THỬ ---
 if __name__ == '__main__':
-    # Ví dụ sếp muốn cào cho CLB có ID 66 ở mùa 2024
     fetch_players_for_club(club_id=66, season_year="2024")

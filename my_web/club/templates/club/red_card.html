@@ -137,21 +137,17 @@
     <div class="top-red_card-container">
         <div class="top-red_card-title">Red Cards</div>
 
-        <!-- Danh sách cầu thủ -->
         <div class="red_card-list">
             {% for row in results %}
                 <div class="player-row">
-                    <!-- Hạng -->
                     <div class="rank">{{ forloop.counter }}</div>
 
-                    <!-- Ảnh đại diện cầu thủ -->
                     {% if row.1 %}
                         <img src="{{ row.1 }}" class="avatar" alt="Avatar">
                     {% else %}
                         <div class="avatar">Trống</div>
                     {% endif %}
 
-                    <!-- Thông tin cầu thủ -->
                     <div class="player-info">
                         <div class="player-name">{{ row.0 }}</div>
 
@@ -167,7 +163,6 @@
                         </div>
                     </div>
 
-                    <!-- Số bàn thắng -->
                     <div class="red_card">{{ row.4 }}</div>
                 </div>
             {% empty %}
