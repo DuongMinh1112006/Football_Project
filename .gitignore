@@ -4,3 +4,6 @@ docker-compose.yaml
 Dockerfile
 .idea/
 **/.idea/
+__pycache__/
+*.pyc
+**/__pycache__/
