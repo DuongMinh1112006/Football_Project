@@ -1,5 +1,5 @@
 from django.shortcuts import render,get_object_or_404, redirect
-from .models import Club, Player, Contract, Standing, Fixture
+from .models import Club, Player, Contract, Fixture
 from django.contrib import messages
 from django.db import connection
 
@@ -74,7 +74,7 @@ def standing(request):
 
     context = {
         'standings': standings,
-        'current_round': 'Live Data'  # Báo cáo realtime
+        'current_round': 'Live Data'
     }
     return render(request, 'club/standing.html', context)
 

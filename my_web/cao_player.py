@@ -58,7 +58,6 @@ def fetch_players_for_club(club_id, season_year="2024"):
                 player_id=p_info['id'],
                 defaults={
                     'player_name': p_info.get('name'),
-                    'player_age': p_info.get('age'),
                     'player_birth_date': p_info.get('birth', {}).get('date'),
                     'player_birth_place': p_info.get('birth', {}).get('place'),
                     'player_nationality': p_info.get('nationality'),

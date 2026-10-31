@@ -197,7 +197,11 @@
 
         <div class="club-badges">
             <div class="badge">Founded: {{ club.club_founded}}</div>
-            <a href="{% url 'stadium' club.club_name club.club_stadium %}" class="badge">Stadium: {{ club.club_stadium}}</a>
+            {% if club.stadium %}
+            <a href="{% url 'stadium' club.club_name club.stadium.name %}" class="badge">Stadium: {{ club.stadium.name}}</a>
+            {% else %}
+                <span class="badge">Stadium: Đang cập nhật</span>
+            {% endif %}
         </div>
     </header>
 
