@@ -30,15 +30,17 @@
             font-size: 0.9em;
             font-weight: 600;
             transition: all 0.2s ease;
-            position: absolute; /* Đặt góc trên bên trái */
+            position: absolute;
             top: 0;
             left: 0;
         }
+
         .back-button:hover {
             background-color: #21262d;
             color: #ffffff;
             border-color: #8b94a3;
         }
+
         .back-icon {
             margin-right: 8px;
             font-size: 1.2em;
@@ -82,6 +84,7 @@
         .match-row:last-child {
             border-bottom: none;
         }
+
         .match-row:hover {
             background-color: #1c2128;
         }
@@ -107,7 +110,7 @@
             width: 35px;
             height: 35px;
             object-fit: contain;
-            background-color: #ffffff; /* Nền trắng đệm lót nếu logo bị trong suốt */
+            background-color: #ffffff;
             border-radius: 50%;
             padding: 2px;
         }
@@ -121,7 +124,7 @@
             background-color: #21262d;
             padding: 8px 0;
             border-radius: 6px;
-            margin: 0 20px; /* Cách đều logo 2 bên */
+            margin: 0 20px;
         }
 
         .match-time {
@@ -141,25 +144,23 @@
 
     <div class="page-title">Fixtures</div>
 
-    {% regroup matches by round_name as grouped_rounds %}
+    {% regroup matches|dictsort:"round_name" by round_name as grouped_rounds %}
 
     {% for round in grouped_rounds %}
         <div class="round-title">{{ round.grouper }}</div>
 
         <div class="match-card">
+            <!-- Sắp xếp các trận đấu trong cùng 1 vòng theo thời gian -->
             {% for match in round.list|dictsort:"match_date" %}
             <div class="match-row">
 
-                <!-- ĐỘI NHÀ -->
                 <div class="team home-team">
                     <span>{{ match.home_team.club_name }}</span>
-                    <!-- Kiểm tra nếu có logo thì load, không thì bỏ qua -->
                     {% if match.home_team.club_logo %}
-                        <img src="{{ match.home_team.club_logo}}" class="team-logo" alt="Logo {{ match.home_team.name }}">
+                        <img src="{{ match.home_team.club_logo }}" class="team-logo" alt="Logo {{ match.home_team.club_name }}">
                     {% endif %}
                 </div>
 
-                <!-- TỈ SỐ -->
                 <div class="score-box">
                     {% if match.home_score is not None %}
                         {{ match.home_score }} - {{ match.away_score }}
@@ -168,15 +169,13 @@
                     {% endif %}
                 </div>
 
-                <!-- ĐỘI KHÁCH -->
                 <div class="team away-team">
                     {% if match.away_team.club_logo %}
-                        <img src="{{ match.away_team.club_logo}}" class="team-logo" alt="Logo {{ match.away_team.name }}">
+                        <img src="{{ match.away_team.club_logo }}" class="team-logo" alt="Logo {{ match.away_team.club_name }}">
                     {% endif %}
                     <span>{{ match.away_team.club_name }}</span>
                 </div>
 
-                <!-- THỜI GIAN -->
                 <div class="match-time">{{ match.match_date }}</div>
             </div>
             {% endfor %}

@@ -76,8 +76,6 @@ class PlayerFixture(models.Model):
 
     rating = models.CharField(max_length=10, null=True, blank=True)  # API-Football thường trả về chuỗi như "7.5"
     minutes = models.IntegerField(default=0, null=True, blank=True)
-    min_in = models.IntegerField(null=True, blank=True)
-    min_out = models.IntegerField(null=True, blank=True)
 
     goals = models.IntegerField(default=0, null=True, blank=True)
     assists = models.IntegerField(default=0, null=True, blank=True)

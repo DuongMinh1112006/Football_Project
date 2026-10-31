@@ -128,19 +128,21 @@ def add_player_stat(request):
         goals = request.POST.get('goals') or 0
         assists = request.POST.get('assists') or 0
         yellow_card = request.POST.get('yellow_card') or 0
+        minutes = request.POST.get('minutes') or 0
         red_card = request.POST.get('red_card') or 0
         rating = request.POST.get('rating') or 0
 
         with connection.cursor() as cursor:
 
             sql = """
-                INSERT INTO club_playerfixture (fixture_id, player_id, rating, goals, assists, yellow_card, red_card)
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
+                INSERT INTO club_playerfixture (fixture_id, player_id, rating, goals, assists, minutes, yellow_card, red_card)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                 ON CONFLICT (fixture_id, player_id) 
                 DO UPDATE SET 
                     rating = EXCLUDED.rating,
                     goals = EXCLUDED.goals,
                     assists = EXCLUDED.assists,
+                    minutes = EXCLUDED.minutes,
                     yellow_card = EXCLUDED.yellow_card,
                     red_card = EXCLUDED.red_card;
             """
@@ -148,11 +150,14 @@ def add_player_stat(request):
             if int(yellow_card) > 2:
                 messages.error(request, "Số lượng thẻ vàng không thể lớn hơn 2")
                 return redirect('/add-player-stat/')
-            if int(red_card) > 2:
+            if int(red_card) > 1:
                 messages.error(request, "Số lượng thẻ đỏ không thể lớn hơn 1")
                 return redirect('/add-player-stat/')
+            if int(minutes) > 90:
+                messages.error(request, "Số phút không vượt quá 90")
+                return redirect('/add-player-stat/')
 
-            cursor.execute(sql, [fixture_id, player_id, rating, goals, assists, yellow_card, red_card])
+            cursor.execute(sql, [fixture_id, player_id, rating, goals, assists, minutes, yellow_card, red_card])
 
         return redirect('/add-player-stat/')
 
@@ -170,7 +175,7 @@ def add_player_stat(request):
             SELECT p.player_id, p.player_name, c.club_name
             FROM club_player p
             JOIN club_contract ct ON p.player_id = ct.player_id
-            JOIN club_club c ON ct.club_id = c.club_id
+            JOIN club_club c ON ct.club_id = c.club_id  
             ORDER BY c.club_name, p.player_name
         """)
         players = cursor.fetchall()
@@ -197,6 +202,7 @@ def search_page(request):
                     c.club_name,
                     COALESCE(SUM(pf.goals), 0) AS total_goals,
                     COALESCE(SUM(pf.assists), 0) AS total_assists,
+                    COALESCE(SUM(pf.minutes), 0) AS total_minutes,
                     ct.position
                 FROM club_player p
                 JOIN club_contract ct ON p.player_id = ct.player_id

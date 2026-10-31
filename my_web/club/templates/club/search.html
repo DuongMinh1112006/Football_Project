@@ -208,6 +208,7 @@
                     <th>Position</th>
                     <th class="text-center">Goals</th>
                     <th class="text-center">Assists</th>
+                    <th class="text-center">Minutes</th>
                 </tr>
             </thead>
             <tbody>
@@ -233,14 +234,16 @@
                             </div>
                         </td>
 
-                        <!-- Vị trí (row.6) -->
-                        <td>{{ row.6 }}</td>
+                        <!-- Vị trí (row.7) -->
+                        <td>{{ row.7 }}</td>
 
                         <!-- Bàn thắng (row.4) -->
                         <td class="text-center stat-highlight">{{ row.4 }}</td>
 
                         <!-- Kiến tạo (row.5) -->
                         <td class="text-center">{{ row.5 }}</td>
+
+                        <td class="text-center">{{ row.6 }}</td>
                     </tr>
                 {% endfor %}
             </tbody>
