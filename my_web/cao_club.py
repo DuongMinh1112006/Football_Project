@@ -49,7 +49,6 @@ def run():
                 defaults={
                     'club_name': team_name,
                     'club_founded': founded,
-                    'club_stadium': stadium_name,  # Cột này trong Club sếp đang để CharField
                     'club_logo': logo
                 }
             )
@@ -74,9 +73,9 @@ def run():
                         'club_id': team_id
                     }
                 )
-                print(f"   -> Đã lưu Stadium: {stadium_name}")
+                print(f"-> Đã lưu Stadium: {stadium_name}")
             else:
-                print(f"   -> ⚠Bỏ qua Stadium của {team_name} vì API không trả về ID sân bóng.")
+                print(f"-> ⚠Bỏ qua Stadium của {team_name} vì API không trả về ID sân bóng.")
 
         except Exception as e:
             print(f"Lỗi khi lưu dữ liệu đội {team_name}: {e}")
