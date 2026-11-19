@@ -67,9 +67,7 @@ def standing(request):
 
     with connection.cursor() as cursor:
         cursor.execute(sql)
-        # Lấy tên cột từ SQL (club_name, points, goal_difference...)
         columns = [col[0] for col in cursor.description]
-        # Ép dữ liệu thành danh sách Dictionary để HTML dễ đọc
         standings = [dict(zip(columns, row)) for row in cursor.fetchall()]
 
     context = {
@@ -103,7 +101,14 @@ def add_fixture(request):
             cursor.execute("SELECT COALESCE(MAX(fixture_id), 0) + 1 FROM club_fixture")
             new_id = cursor.fetchone()[0]
             sql = """
-                INSERT INTO club_fixture (fixture_id, home_team_id, away_team_id, home_score, away_score, round_name, match_date)
+                INSERT INTO club_fixture (
+                    fixture_id,
+                    home_team_id, 
+                    away_team_id,
+                    home_score,
+                    away_score,
+                    round_name,
+                    match_date)
                 VALUES (%s, %s, %s, %s, %s, %s, %s)
             """
             if home_club == away_club:
@@ -133,9 +138,11 @@ def add_player_stat(request):
         rating = request.POST.get('rating') or 0
 
         with connection.cursor() as cursor:
-
             sql = """
-                INSERT INTO club_playerfixture (fixture_id, player_id, rating, goals, assists, minutes, yellow_card, red_card)
+                INSERT INTO club_playerfixture (
+                    fixture_id, player_id, 
+                    rating, goals, assists, 
+                    minutes, yellow_card, red_card)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
                 ON CONFLICT (fixture_id, player_id) 
                 DO UPDATE SET 
@@ -146,7 +153,6 @@ def add_player_stat(request):
                     yellow_card = EXCLUDED.yellow_card,
                     red_card = EXCLUDED.red_card;
             """
-
             if int(yellow_card) > 2:
                 messages.error(request, "Số lượng thẻ vàng không thể lớn hơn 2")
                 return redirect('/add-player-stat/')
@@ -204,7 +210,7 @@ def search_page(request):
                     COALESCE(SUM(pf.assists), 0) AS total_assists,
                     COALESCE(SUM(pf.minutes), 0) AS total_minutes,
                     ct.position
-                FROM club_player p
+                 FROM club_player p
                 JOIN club_contract ct ON p.player_id = ct.player_id
                 JOIN club_club c ON ct.club_id = c.club_id
                 LEFT JOIN club_playerfixture pf ON p.player_id = pf.player_id

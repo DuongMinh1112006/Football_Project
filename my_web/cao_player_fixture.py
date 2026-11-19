@@ -53,8 +53,6 @@ def fetch_fixture_players():
                 minutes = games_data.get('minutes')
 
                 subs_data = stats.get('substitutes', {})
-                min_in = subs_data.get('in')
-                min_out = subs_data.get('out')
 
                 goals_data = stats.get('goals', {})
                 goals = goals_data.get('total') or 0
@@ -70,8 +68,6 @@ def fetch_fixture_players():
                     defaults={
                         'rating': str(rating) if rating else None,
                         'minutes': minutes,
-                        'min_in': min_in,
-                        'min_out': min_out,
                         'goals': goals,
                         'assists': assists,
                         'yellow_card': yellow_card,
