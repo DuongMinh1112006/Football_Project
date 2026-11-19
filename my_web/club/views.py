@@ -193,7 +193,7 @@ def add_player_stat(request):
     })
 
 
-def search_page(request)
+def search_page(request):
     query = request.GET.get('q', '')
     position = request.GET.get('pos', '')
     results = []
