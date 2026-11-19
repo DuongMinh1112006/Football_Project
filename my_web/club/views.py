@@ -181,8 +181,8 @@ def add_player_stat(request):
             SELECT p.player_id, p.player_name, c.club_name
             FROM club_player p
             JOIN club_contract ct ON p.player_id = ct.player_id
-            JOIN club_club c ON ct.club_id = c.club_id  #
-            ORDER BY c.club_name, p.player_name   #
+            JOIN club_club c ON ct.club_id = c.club_id  
+            ORDER BY c.club_name, p.player_name   
         """)
         players = cursor.fetchall()
 
